@@ -1,0 +1,16 @@
+.page { min-height: 100vh; padding: 3rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 3rem; }
+.topbar { width: 100%; max-width: 900px; display: flex; justify-content: flex-end; }
+.hero { text-align: center; max-width: 520px; }
+.pill { display: inline-block; padding: 0.4rem 1.2rem; background: var(--pink-100); color: var(--pink-600); border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.2rem; }
+.title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; line-height: 1.1; color: var(--text-dark); margin-bottom: 1rem; }
+.title span { color: var(--pink-500); }
+.sub { color: var(--text-mid); font-size: 1.1rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; width: 100%; max-width: 900px; }
+.setCard { background: var(--card-bg); border-radius: 20px; padding: 2rem; cursor: pointer; border: 2px solid var(--border); box-shadow: var(--shadow); transition: all 0.25s; display: flex; flex-direction: column; gap: 0.5rem; }
+.setCard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--pink-300); }
+.setIcon { font-size: 2.5rem; }
+.setCard h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--text-dark); }
+.setCard p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; }
+.count { font-size: 0.8rem; color: var(--pink-400); font-weight: 600; }
+.startBtn { margin-top: 0.75rem; padding: 0.75rem 1.5rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--pink-300), var(--rose)); color: white; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+.startBtn:hover { opacity: 0.9; }

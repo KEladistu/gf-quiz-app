@@ -1,0 +1,30 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-mid);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.toggle:hover {
+  border-color: var(--pink-300);
+  color: var(--pink-500);
+  transform: translateY(-1px);
+}
+
+.icon {
+  font-size: 1rem;
+}
+
+.label {
+  font-size: 0.8rem;
+}
