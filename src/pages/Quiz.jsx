@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { quizSets } from "../data/questions";
+import { getSet } from "../data/store";
 import QuizCard from "../components/QuizCard";
 import ThemeToggle from "../components/ThemeToggle";
 import styles from "./Quiz.module.css";
@@ -8,7 +8,7 @@ import styles from "./Quiz.module.css";
 export default function Quiz() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const set = quizSets.find((s) => s.id === id);
+  const set = getSet(id);
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState({ correct: 0, wrong: 0 });
   const [done, setDone] = useState(false);
