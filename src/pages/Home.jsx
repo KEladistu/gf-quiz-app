@@ -26,7 +26,7 @@ export default function Home() {
       </div>
       <div className={styles.hero}>
         <div className={styles.pill}>✨ Your Reviewer</div>
-        <h1 className={styles.title}>Study<br /><span>Smarter, Bebe 💕</span></h1>
+        <h1 className={styles.title}>Study<br /><span>Smarter, Asawa 💕</span></h1>
         <p className={styles.sub}>Paste your notes, we'll turn them into quizzes.</p>
         <button className={styles.createBtn} onClick={() => navigate("/create")}>
           + Create New Reviewer
