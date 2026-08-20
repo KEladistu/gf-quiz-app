@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSet, upsertSet, newId, parseNotes } from "../data/store";
+import { extractFromFile, generateFromProse } from "../data/extract";
 import ThemeToggle from "../components/ThemeToggle";
 import styles from "./Create.module.css";
 
@@ -22,6 +23,9 @@ export default function Create() {
   const [notes, setNotes] = useState("");
   const [questions, setQuestions] = useState([]);
   const [preview, setPreview] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
+  const [extracting, setExtracting] = useState(false);
+  const [extractMsg, setExtractMsg] = useState("");
 
   useEffect(() => {
     if (!editing) return;
@@ -37,6 +41,50 @@ export default function Create() {
   const handleParse = () => {
     const parsed = parseNotes(notes);
     setPreview(parsed);
+  };
+
+  const handleFiles = async (fileList) => {
+    const files = Array.from(fileList || []);
+    if (files.length === 0) return;
+    setExtracting(true);
+    setExtractMsg("");
+    try {
+      const texts = [];
+      for (const f of files) {
+        const t = await extractFromFile(f);
+        texts.push(t);
+        if (!title.trim()) setTitle(f.name.replace(/\.[^.]+$/, ""));
+      }
+      const combined = texts.join("\n\n");
+      // Try structured parse first
+      const structured = parseNotes(combined);
+      let out;
+      if (structured.length >= 3) {
+        out = combined;
+        setExtractMsg(`✓ Extracted from ${files.length} file(s) — found ${structured.length} Q&A items.`);
+      } else {
+        // Auto-generate fill-in-the-blank from prose
+        const generated = generateFromProse(combined, 25);
+        out = generated || combined;
+        setExtractMsg(
+          generated
+            ? `✓ Extracted from ${files.length} file(s) — auto-generated fill-in-the-blank questions. Edit if you want.`
+            : `✓ Extracted text. Edit into "term :: definition" lines below.`
+        );
+      }
+      setNotes((prev) => (prev.trim() ? prev + "\n\n" + out : out));
+      setPreview(parseNotes(out));
+    } catch (err) {
+      setExtractMsg(`❌ ${err.message || "Failed to read file"}`);
+    } finally {
+      setExtracting(false);
+    }
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    handleFiles(e.dataTransfer.files);
   };
 
   const addManual = () => {
@@ -124,6 +172,29 @@ export default function Create() {
 
         {mode === "notes" && !editing && (
           <>
+            <label className={styles.label}>Upload files</label>
+            <div
+              className={dragOver ? styles.dropZoneActive : styles.dropZone}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+            >
+              <div className={styles.dropIcon}>📎</div>
+              <p><b>Drag & drop</b> PDF, DOCX, TXT, or MD here</p>
+              <label className={styles.uploadBtn}>
+                Or choose files
+                <input
+                  type="file"
+                  multiple
+                  accept=".pdf,.docx,.txt,.md,text/*"
+                  onChange={(e) => handleFiles(e.target.files)}
+                  style={{ display: "none" }}
+                />
+              </label>
+              {extracting && <p className={styles.extractingMsg}>⏳ Reading files...</p>}
+              {extractMsg && !extracting && <p className={styles.extractMsg}>{extractMsg}</p>}
+            </div>
+
             <label className={styles.label}>Your notes</label>
             <p className={styles.hint}>
               One item per line. Use <code>term :: definition</code> or <code>Q: ...</code> / <code>A: ...</code>.
